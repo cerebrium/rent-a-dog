@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import './App.css';
-import Login from './Login'
-import SignUp from './SignUp'
-import axios from 'axios'
+import AllDogs from './AllDogs';
+import CreatePic from './CreatePic';
+import Home from './Home';
+import MeetDog from './MeetDog';
+import Profile from './Profile';
+import SavedPics from './SavedPics';
+import CompareProfile from './CompareProfile';
+import axios from 'axios';
+
 import {
   BrowserRouter as Router,
   Route,
-  Link
+  NavLink
 } from "react-router-dom";
 
 class App extends Component {
@@ -14,8 +20,10 @@ class App extends Component {
     token: '',
     user: null,
     errorMessage: '',
-    lockedResult: ''
+    lockedResult: '',
+    login: false,
   }
+
   checkForLocalToken = () => {
     //look for token in local storage
     let token = localStorage.getItem('mernToken')
@@ -31,7 +39,58 @@ class App extends Component {
       axios.post('/auth/me/from/token', {token})
       .then( response => {
         if (response.data.type === 'error'){
-          // console.log('ERROR:', response.data.message)
+          localStorage.removeItem('mernToken')
+          this.setState({
+            token: '',
+            user: null,
+            errorMessage: response.data.message
+          })
+        } else {
+          //if verified store it back in local storage and state
+          localStorage.setItem('mernToken', response.data.token)
+          this.setState({
+            token: response.data.token,
+            user: response.data.user
+          })
+        }
+      })
+    }
+  }
+
+  componentDidMount = () => {
+    this.checkForLocalToken()
+  }
+
+  liftToken = ({token, user}) => {
+    this.setState({
+      token,
+      user
+    })
+  }
+
+  logOut = () => {
+    localStorage.removeItem('mernToken')
+    this.setState({
+      token: '',
+      user: null,
+    })
+  }
+
+  checkForLocalToken = () => {
+    //look for token in local storage
+    let token = localStorage.getItem('mernToken')
+    if (!token || token === 'undefined'){
+      //if no token remove all evidence of mernToken from localStorage and state
+      localStorage.removeItem('mernToken')
+      this.setState({
+        token: '',
+        user: null
+      })
+    } else {
+      // if we find token verify it on the backend
+      axios.post('/auth/me/from/token', {token})
+      .then( response => {
+        if (response.data.type === 'error'){
           localStorage.removeItem('mernToken')
           this.setState({
             token: '',
@@ -81,31 +140,51 @@ class App extends Component {
       })
     })
   }
+
+  handleLoginClick = () => {
+      if (this.state.login){
+          this.setState({
+              login: false
+          })
+      } else {
+          this.setState({
+              login: true
+          })
+      }
+  }
+
   render() { 
-    let contents;
     if(this.state.user){
-      contents =(
-        <nav>
-          <p>Hello, {this.state.user.name}</p>
-          <button onClick={this.handleClick}>Test the protected route</button>
-          <button onClick={this.logOut}>Log Out</button>
-        </nav>
-      )
-    } else {
-      contents = (
-        <nav>
-        <SignUp liftToken={this.liftToken} />
-        <Login liftToken={this.liftToken} /> 
-        </nav>
+      var profile = (
+        <>
+          <NavLink className='navlink' to='/create'>CREATE</NavLink>{' | '}
+          <NavLink  className='navlink' to='/saved'>SAVED</NavLink>{' | '}
+          <NavLink  className='navlink' to='/meet'>ADOPT</NavLink> {' | '} 
+          <NavLink className='navlink' to='/compare' >TOP DOGS</NavLink> {' | '} 
+          <NavLink  className='navlink' to='/profile'>PROFILE</NavLink>{' | '} 
+          <NavLink className='navlink' to='/' onClick={this.logOut}>LOG OUT</NavLink>
+        </>
       )
     }
     return ( 
-        <div className='App'>
-          <h1>My Site</h1>
-          {contents}
+      <div>
+        <Router>
+        <nav><img className='logo' src='https://i.imgur.com/cvN4hi9.png' ></img>
+        <NavLink className='navlink' to='/'>HOME</NavLink>{' | '}
+        <NavLink className='navlink' to='/dogs'>DOGS</NavLink>{' | '} 
+        {profile}
+        </nav>
+        <Route exact path='/' render={() => <Home user={this.state.user} logOut={this.logOut} liftToken={this.liftToken} handleLoginClick={this.handleLoginClick} login={this.state.login}/> } />
+        <Route exact path='/dogs' component={AllDogs} />
+        <Route exact path='/create' render={() => <CreatePic user={this.state.user}/> } />
+        <Route exact path='/meet' render={() => <MeetDog user={this.state.user}/> } />
+        <Route exact path='/saved' render={() => <SavedPics user={this.state.user}/> } />
+        <Route exact path='/compare' render={() => <CompareProfile user={this.state.user}/> } />
+        <Route exact path='/profile' render={() => <Profile user={this.state.user} liftToken={this.liftToken}/> } />
+        </Router>
         </div>
     );
   }
 }
- 
+
 export default App;

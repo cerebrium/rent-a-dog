@@ -5,12 +5,15 @@ class Login extends Component {
         email: '',
         password: '',
         message: ''
-     }
+    }
+
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
     }
+
+
     handleSubmit = (e) => {
         e.preventDefault()
         axios.post('/auth/login', {
@@ -18,8 +21,9 @@ class Login extends Component {
             password: this.state.password
         }).then( response => {
             if (response.data.type === 'error') {
-                console.log('ERROR:', response.data.message)
-                // TODO: maybe put this message in state? 
+                this.setState({
+                    message: response.data.message
+                })
             } else {
                 localStorage.setItem('mernToken', response.data.token)
                 this.props.liftToken(response.data)
@@ -29,17 +33,20 @@ class Login extends Component {
             console.log(err)
         })
     }
+    
     render() { 
         return ( 
-            <div className="Login">
+            <div>
                 <h3>Log into your account!</h3>
                 <form onSubmit={this.handleSubmit}>
+                {this.state.message} 
+                <br />
                 Email: <input type='text' name='email' onChange={this.handleChange} value={this.state.email} /> <br />
                 Password: <input type='password' name='password' onChange={this.handleChange} value={this.state.password} /> <br />
                 <input type='submit' value='Log In!' />
                 </form>
             </div>
-         );
+        );
     }
 }
  

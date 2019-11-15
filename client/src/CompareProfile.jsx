@@ -1,0 +1,35 @@
+import axios from 'axios';
+import React from 'react';
+
+class CompareProfile extends React.Component {
+
+    state = {
+        dogList: []
+    }
+    //grabs favorited dogs and how many times these dogs were favorited
+    componentDidMount = () => {
+        axios.get('/counter')
+        .then(response => {
+            this.setState({
+                dogList: response.data
+            })
+        })
+    }
+
+    render () {
+        if (this.state.dogList) {
+            console.log(this.state.dogList)
+            var mappedDogs = this.state.dogList.map((dog, id) => <h2 key={id} className='compareNames'>{dog[0]}{' : '}{dog[1]}</h2>)
+        } else {
+            var mappedDogs = 'loading dog comparison'
+        }
+        return (
+            <div className='App'>
+                <h1 className='title'>Here are the Dog's user Ratings!</h1>
+                {mappedDogs}
+            </div>
+        )
+    }
+}
+
+export default CompareProfile
