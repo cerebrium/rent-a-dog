@@ -25,10 +25,8 @@ app.use('/locked',
     expressJWT({secret: process.env.JWT_SECRET}).unless({method: 'POST'}),
     require('./routes/locked'))
 
-    // heroku deployment route
-app.get('*', (req, res) => {
-    res.sendFile(__dirname + '/client/build/index.html')
-})
+
+
 
 app.listen(process.env.PORT, () => {
     console.log(`you are listening to the sweet sounds of port ${process.env.PORT}`)

@@ -27,7 +27,7 @@ app.use('/locked',
 
     // heroku deployment route
 app.get('*', (req, res) => {
-    res.sendFile(__dirname + '/client/build/index.html')
+    
 })
 
 app.listen(process.env.PORT, () => {
