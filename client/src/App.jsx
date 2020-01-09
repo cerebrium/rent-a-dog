@@ -26,6 +26,7 @@ const App = () => {
       axios.post('/auth/signup', {
         name: response.profileObj.name, 
         email: response.profileObj.email, 
+        photo: 'https://res.cloudinary.com/sross9845/image/upload/v1578533522/petapi/kdelzzpcccqszxbgnjr1.jpg'
       }).then(res => {
         setUser(res.data)
         console.log(res.data)
