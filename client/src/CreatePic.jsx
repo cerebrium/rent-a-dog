@@ -11,6 +11,7 @@ class CreatePic extends Component {
     }
 
     componentDidMount = () => {
+        console.log(this.props)
         axios.get('/token')
         .then(response => {
             this.setState({
