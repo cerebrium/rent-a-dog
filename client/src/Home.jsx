@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import SignUp from './SignUp';
-import Login from './Login'
 
 class Home extends Component {
   render () {
@@ -13,22 +11,9 @@ class Home extends Component {
           </p>
           </div>
       )
-  //Conditional displaying login or signup
-  } else if (this.props.login){
-      contents = (
-      <div className="Login">
-      <Login liftToken={this.props.liftToken} /> 
-      <button onClick={this.props.handleLoginClick}> Sign Up Instead!</button>
-      </div>
-      )
-  } else {
-      contents = (
-          <div className="Signup">
-          <SignUp liftToken={this.props.liftToken} />
-          <button onClick={this.props.handleLoginClick}> Login Instead!</button>
-          </div>
-          )
-  }
+    } else {
+      contents = ('')
+    }
     return (
       <div className='App'>
         <h1 className="title"><u>Rent a Dog</u></h1>

@@ -47,7 +47,4 @@ const axios = require('axios');
         })
     })    
 
-
-
-
-module.exports = router;
+    module.exports = router

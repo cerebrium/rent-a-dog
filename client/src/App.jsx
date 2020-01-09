@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, Component } from 'react';
+import { GoogleLogin } from 'react-google-login';
 import './App.css';
 import AllDogs from './AllDogs';
 import CreatePic from './CreatePic';
@@ -12,179 +13,73 @@ import axios from 'axios';
 import {
   BrowserRouter as Router,
   Route,
-  NavLink
+  Link
 } from "react-router-dom";
 
-class App extends Component {
-  state = { 
-    token: '',
-    user: null,
-    errorMessage: '',
-    lockedResult: '',
-    login: false,
-  }
+const App = () => {
+  const [ user, setUser] = useState(null)
 
-  checkForLocalToken = () => {
-    //look for token in local storage
-    let token = localStorage.getItem('mernToken')
-    if (!token || token === 'undefined'){
-      //if no token remove all evidence of mernToken from localStorage and state
-      localStorage.removeItem('mernToken')
-      this.setState({
-        token: '',
-        user: null
-      })
-    } else {
-      // if we find token verify it on the backend
-      axios.post('/auth/me/from/token', {token})
-      .then( response => {
-        if (response.data.type === 'error'){
-          localStorage.removeItem('mernToken')
-          this.setState({
-            token: '',
-            user: null,
-            errorMessage: response.data.message
-          })
-        } else {
-          //if verified store it back in local storage and state
-          localStorage.setItem('mernToken', response.data.token)
-          this.setState({
-            token: response.data.token,
-            user: response.data.user
-          })
-        }
-      })
-    }
-  }
-
-  componentDidMount = () => {
-    this.checkForLocalToken()
-  }
-
-  liftToken = ({token, user}) => {
-    this.setState({
-      token,
-      user
+  const responseGoogle = (response) => {
+    // setUserName(response.profileObj.givenName)
+    // setUserId(response.profileObj.googleId)
+    // setUserEmail(response.profileObj.email)
+      axios.post('/auth/signup', {
+        name: response.profileObj.name, 
+        email: response.profileObj.email, 
+      }).then(res => {
+        setUser(res.data)
+        console.log(res.data)
     })
   }
 
-  logOut = () => {
-    localStorage.removeItem('mernToken')
-    this.setState({
-      token: '',
-      user: null,
-    })
-  }
-
-  checkForLocalToken = () => {
-    //look for token in local storage
-    let token = localStorage.getItem('mernToken')
-    if (!token || token === 'undefined'){
-      //if no token remove all evidence of mernToken from localStorage and state
-      localStorage.removeItem('mernToken')
-      this.setState({
-        token: '',
-        user: null
-      })
-    } else {
-      // if we find token verify it on the backend
-      axios.post('/auth/me/from/token', {token})
-      .then( response => {
-        if (response.data.type === 'error'){
-          localStorage.removeItem('mernToken')
-          this.setState({
-            token: '',
-            user: null,
-            errorMessage: response.data.message
-          })
-        } else {
-          //if verified store it back in local storage and state
-          localStorage.setItem('mernToken', response.data.token)
-          this.setState({
-            token: response.data.token,
-            user: response.data.user
-          })
-        }
-      })
-    }
-  }
-
-  componentDidMount = () => {
-    this.checkForLocalToken()
-  }
-  liftToken = ({token, user}) => {
-    this.setState({
-      token,
-      user
-    })
-  }
-
-  logOut = () => {
-    localStorage.removeItem('mernToken')
-    this.setState({
-      token: '',
-      user: null,
-    })
-  }
-
-  handleClick = () => {
-    let config = {
-      headers: {
-        Authorization: `Bearer ${this.state.token}`
-      }
-    }
-    axios.get('/locked/test', config)
-    .then(response => {
-      this.setState({
-        lockedResult: response.data
-      })
-    })
-  }
-
-  handleLoginClick = () => {
-      if (this.state.login){
-          this.setState({
-              login: false
-          })
-      } else {
-          this.setState({
-              login: true
-          })
-      }
-  }
-
-  render() { 
-    if(this.state.user){
-      var profile = (
-        <>
-          <NavLink className='navlink' to='/create'>CREATE</NavLink>{' | '}
-          <NavLink  className='navlink' to='/saved'>SAVED</NavLink>{' | '}
-          <NavLink  className='navlink' to='/meet'>ADOPT</NavLink> {' | '} 
-          <NavLink className='navlink' to='/compare' >TOP DOGS</NavLink> {' | '} 
-          <NavLink  className='navlink' to='/profile'>PROFILE</NavLink>{' | '} 
-          <NavLink className='navlink' to='/' onClick={this.logOut}>LOG OUT</NavLink>
-        </>
-      )
-    }
-    return ( 
+  var profile;
+  if(user) {
+    console.log(user)
+    profile = (
       <div>
         <Router>
+        <Link className='navlink' to='/create'>CREATE</Link>{' | '}
+        <Link  className='navlink' to='/saved'>SAVED</Link>{' | '}
+        <Link  className='navlink' to='/meet'>ADOPT</Link> {' | '} 
+        <Link className='navlink' to='/compare' >TOP DOGS</Link> {' | '} 
+        <Link  className='navlink' to='/profile'>PROFILE</Link>{' | '} 
+        
         <nav><img className='logo' src='https://i.imgur.com/cvN4hi9.png' ></img>
-        <NavLink className='navlink' to='/'>HOME</NavLink>{' | '}
-        <NavLink className='navlink' to='/dogs'>DOGS</NavLink>{' | '} 
+        <Link className='navlink' to='/'>HOME</Link>{' | '}
+        <Link className='navlink' to='/dogs'>DOGS</Link>{' | '} 
         {profile}
         </nav>
-        <Route exact path='/' render={() => <Home user={this.state.user} logOut={this.logOut} liftToken={this.liftToken} handleLoginClick={this.handleLoginClick} login={this.state.login}/> } />
+        <Route exact path='/' render={() => <Home user={user} /> } />
         <Route exact path='/dogs' component={AllDogs} />
-        <Route exact path='/create' render={() => <CreatePic user={this.state.user}/> } />
-        <Route exact path='/meet' render={() => <MeetDog user={this.state.user}/> } />
-        <Route exact path='/saved' render={() => <SavedPics user={this.state.user}/> } />
-        <Route exact path='/compare' render={() => <CompareProfile user={this.state.user}/> } />
-        <Route exact path='/profile' render={() => <Profile user={this.state.user} liftToken={this.liftToken}/> } />
-        </Router>
-        </div>
-    );
+        <Route exact path='/create' render={() => <CreatePic user={user}/> } />
+        <Route exact path='/meet' render={() => <MeetDog user={user}/> } />
+        <Route exact path='/saved' render={() => <SavedPics user={user}/> } />
+        <Route exact path='/compare' render={() => <CompareProfile user={user}/> } />
+        <Route exact path='/profile' render={() => <Profile user={user} /> } />
+      </Router>
+    </div>
+    )
+  } else {
+    profile = (
+    <div className='googleLogin'>
+      <h1>Click to login with Google!</h1>
+      <GoogleLogin
+      clientId="801108272625-cbbc8i5j8v8s423p95mkte842cdp7d32.apps.googleusercontent.com"
+      buttonText="Login"
+      onSuccess={responseGoogle}
+      onFailure={responseGoogle}
+      cookiePolicy={'single_host_origin'}
+      />
+    </div>)
   }
+ 
+
+  return ( 
+    <>
+      {profile}
+    </>
+  );
+
 }
 
 export default App;

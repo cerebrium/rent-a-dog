@@ -9,8 +9,8 @@ class MeetDog extends Component {
     }
 
     componentDidMount = () => {
-        axios.get('/token')
-        .then(response => {
+        console.log('in the componnent did mount')
+        axios.get('/token').then(response => {
             this.setState({
                 tokenVar: response.data
             })
@@ -24,7 +24,6 @@ class MeetDog extends Component {
             })
         }
     }
-
 
     render() { 
         if (this.state.dogList) {

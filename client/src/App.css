@@ -20,3 +20,11 @@
 .App-link {
   color: #09d3ac;
 }
+
+.googleLogin{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
