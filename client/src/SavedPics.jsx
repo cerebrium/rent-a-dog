@@ -18,9 +18,11 @@ class SavedPics extends Component {
         if (this.props.user) {
             axios.get(`/favourite/getuser/random/${this.props.user._id}`)
             .then(response => {
-                this.setState({
-                    dogList: response.data.favoriteDogs
-                })
+                if (response.data.favoriteDogs.length > 0) {
+                    this.setState({
+                        dogList: response.data.favoriteDogs
+                    })
+                }
             })
         }
     }
