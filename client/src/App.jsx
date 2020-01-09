@@ -38,13 +38,12 @@ const App = () => {
     profile = (
       <div>
         <Router>
+        <nav><img className='logo' src='https://i.imgur.com/cvN4hi9.png' ></img>
         <Link className='navlink' to='/create'>CREATE</Link>{' | '}
         <Link  className='navlink' to='/saved'>SAVED</Link>{' | '}
         <Link  className='navlink' to='/meet'>ADOPT</Link> {' | '} 
         <Link className='navlink' to='/compare' >TOP DOGS</Link> {' | '} 
         <Link  className='navlink' to='/profile'>PROFILE</Link>{' | '} 
-        
-        <nav><img className='logo' src='https://i.imgur.com/cvN4hi9.png' ></img>
         <Link className='navlink' to='/'>HOME</Link>{' | '}
         <Link className='navlink' to='/dogs'>DOGS</Link>{' | '} 
         {profile}
@@ -64,7 +63,7 @@ const App = () => {
     <div className='googleLogin'>
       <h1>Click to login with Google!</h1>
       <GoogleLogin
-      clientId="801108272625-cbbc8i5j8v8s423p95mkte842cdp7d32.apps.googleusercontent.com"
+      clientId="175290320384-vt629625mlol0lle42p91bsi1mvdh0cn.apps.googleusercontent.com"
       buttonText="Login"
       onSuccess={responseGoogle}
       onFailure={responseGoogle}
