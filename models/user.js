@@ -16,13 +16,11 @@ var favoriteDogsSchema = new mongoose.Schema({
 var userSchema = new mongoose.Schema({
     name:{
         type: String,
-        required: [true, 'You must enter a name'],
         minlength: [1, 'Name must be between 1 and 99 characters'],
         maxlength: [99, 'Name must be between 1 and 99 characters']
     },
     email:{
         type: String,
-        required: [true, 'You must enter an email'],
         minlength: [5, 'Email must be between 5 and 99 characters'],
         maxlength: [99, 'Email must be between 85and 99 characters']
     },
