@@ -28,7 +28,7 @@ const App = () => {
         name: response.profileObj.name, 
         email: response.profileObj.email, 
         photo: 'https://res.cloudinary.com/sross9845/image/upload/v1578533522/petapi/kdelzzpcccqszxbgnjr1.jpg',
-        
+        favoriteDogs: {name: BentleyTinta}
       }).then(res => {
         setUser(res.data)
         console.log(res.data)
