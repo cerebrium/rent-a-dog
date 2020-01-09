@@ -20,10 +20,6 @@ const App = () => {
   const [ user, setUser] = useState(null)
 
   const responseGoogle = (response) => {
-    // setUserName(response.profileObj.givenName)
-    // setUserId(response.profileObj.googleId)
-    // setUserEmail(response.profileObj.email)
-    // another commentg
       axios.post('/auth/signup', {
         name: response.profileObj.name, 
         email: response.profileObj.email, 
@@ -31,13 +27,11 @@ const App = () => {
         favoriteDogs: [{name: 'BentleyTinta'}]
       }).then(res => {
         setUser(res.data)
-        console.log(res.data)
     })
   }
 
   var profile;
   if(user) {
-    console.log(user)
     profile = (
       <div>
         <Router>

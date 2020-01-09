@@ -9,7 +9,6 @@ class MeetDog extends Component {
     }
 
     componentDidMount = () => {
-        console.log('in the componnent did mount')
         axios.get('/token').then(response => {
             this.setState({
                 tokenVar: response.data
@@ -29,7 +28,6 @@ class MeetDog extends Component {
 
     render() { 
         if (this.state.dogList) {
-            console.log(this.state.dogList)
             var mappedDogs = this.state.dogList.map((ele, id) => <div className='ulStyle'><h3>{ele.name}</h3><ul ><li> Status: {ele.status}</li><li>Email: {ele.email}</li><li>Phone:{ele.phone}</li><li>City: {ele.city}</li><li>State: {ele.state}</li></ul></div>)
         } else {
             var mappedDogs = 'Loading Adopt Data'

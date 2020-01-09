@@ -29,7 +29,6 @@ class SavedPics extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        console.log(event.target.id.value)
         axios.get(`/favourite/${this.props.user._id}/${event.target.id.value}`)
         .then( response => {
             this.setState({
