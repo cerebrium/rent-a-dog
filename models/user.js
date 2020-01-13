@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 // Favorite Dogs Schema with photo
 var favoriteDogsSchema = new mongoose.Schema({
     name: String,
-    apiID: {type: String, unique: true, dropDups: true},
+    apiID: String,
     photo: String,
     email: String,
     phone: String,

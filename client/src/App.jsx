@@ -43,7 +43,6 @@ const App = () => {
         <Link  className='navlink' to='/profile'>PROFILE</Link>{' | '} 
         <Link className='navlink' to='/'>HOME</Link>{' | '}
         <Link className='navlink' to='/dogs'>DOGS</Link>{' | '} 
-        {profile}
         </nav>
         <Route exact path='/' render={() => <Home user={user} /> } />
         <Route exact path='/dogs' component={AllDogs} />
