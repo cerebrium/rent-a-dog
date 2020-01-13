@@ -3,6 +3,7 @@ import axios from 'axios';
 
 class MeetDog extends Component {
 
+    // this is where the state goes
     state = { 
         tokenVar: null,
         dogList: null
